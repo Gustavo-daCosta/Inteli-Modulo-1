@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.js"></script>
+    <title>Exercício do Alien</title>
+</head>
+<body>
+    <script>
+        // Define as dimensões do jogo
+        const larguraJogo = 700;
+        const alturaJogo = 850;
+
+        // Variável de configurações
+        const config = {
+            type: Phaser.AUTO,
+            width: larguraJogo,
+            height: alturaJogo,
+
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 400 },
+                    // debug: true,
+                }
+            },
+
+            scene: {
+                preload: preload,
+                create: create,
+                update: update,
+            }
+        };
+
+        // O que acontece aqui?
+        // Uma instância do jogo do Phaser é criada
+        // Passando as configurações como parâmetro
+        const game = new Phaser.Game(config);
+
+        var alien;
+        var plataformas;
+        var teclado;
+        var fogo;
+        var pontuacao = 0;
+        var placar;
+        var quantidadeVidas = 3;
+        var vidas;
+        var mensagem;
+        var mensagemPlacar;
+
+        function preload() {
+            this.load.image('background', './assets/bg.png');
+            this.load.image('player', './assets/alienigena.png');
+            this.load.image('turbo_nave', './assets/turbo.png');
+            this.load.image('plataforma_tijolo', './assets/tijolos.png');
+            this.load.image('moeda', './assets/moeda.png');
+            this.load.image('vida', './assets/coracao.png');
+        }
+
+        function create() {
+            // O que acontece aqui?
+            // Adiciona a imagem de fundo
+            this.add.image(larguraJogo/2, alturaJogo/2, 'background');
+
+            // Adiciona o fogo do modo turbo
+            fogo = this.add.sprite(0, 0, 'turbo_nave');
+            fogo.setVisible(false);
+
+            // Adiciona o alien e impede ele de ultrapassar o mapa
+            alien = this.physics.add.sprite(larguraJogo/2, 0, 'player');
+            alien.setCollideWorldBounds(true);
+
+            // Varíavel para monitorar quando e quais teclas foram pressionadas
+            teclado = this.input.keyboard.createCursorKeys();
+
+            // Adicione a plataforma
+            plataformas = this.physics.add.staticGroup();
+            plataformas.create(larguraJogo - 80, alturaJogo/2 - 50, 'plataforma_tijolo');
+            plataformas.create(80, alturaJogo/2 - 50, 'plataforma_tijolo');
+            plataformas.create(larguraJogo/2, (alturaJogo/3) * 2, 'plataforma_tijolo');
+            this.physics.add.collider(alien, plataformas);
+
+            // Adiciona a moeda e impede ela de ultrapassar o mapa
+            moeda = this.physics.add.sprite(larguraJogo/2, 0, 'moeda');
+            moeda.setCollideWorldBounds(true);
+            moeda.setBounce(0.6);
+            // Faz a moeda colidir com as plataformas
+            this.physics.add.collider(moeda, plataformas);
+
+            // Adiciona o placar
+            placar = this.add.text(10, 10, 'Moedas: ' + pontuacao, {
+                fontSize: '45px',
+                fill: '#495613',
+            });
+
+            // Adiciona as vidas
+            vidas = this.physics.add.staticGroup();
+            vidas.create(larguraJogo - 160, 30, 'vida');
+            vidas.create(larguraJogo - 100, 30, 'vida');
+            vidas.create(larguraJogo - 40, 30, 'vida');
+
+            // Mensagem
+            mensagemPlacar = this.add.text(larguraJogo/2, alturaJogo/2, mensagem, {
+                fontSize: '45px',
+                fill: '#495613',
+            })
+
+            // Lógica de capturar moedas e fazer elas nascerem de novo
+            this.physics.add.overlap(alien, moeda, resetMoeda);
+        }
+
+        var velocidades = [-180, 180, 0];
+
+        function update() {
+            if (teclado.left.isDown) {
+                alien.setVelocityX(velocidades[0]);
+            } else if (teclado.right.isDown) {  
+                alien.setVelocityX(velocidades[1]);
+            } else {
+                alien.setVelocityX(velocidades[2]);
+            }
+
+            if (teclado.up.isDown) {
+                alien.setVelocityY(velocidades[0]);
+            }
+            setTurbo(teclado.up.isDown);
+
+            if (alien.y === (alturaJogo - (alien.height/2))) {
+                alien.y = 100;
+                alien.x = larguraJogo / 2;
+                perderVida();
+            }
+
+            fogo.setPosition(alien.x, alien.y + alien.height / 2);
+
+            if (moeda.y === (alturaJogo - (moeda.height/2))) resetMoeda(false);
+        }
+
+        function setTurbo(situacao) { fogo.setVisible(situacao); }
+
+        function resetMoeda(pontuar = true) {
+            moeda.setVisible(false);
+            var posicaoMoeda_Y = Phaser.Math.RND.between(50, 650);
+            moeda.setPosition(posicaoMoeda_Y, 100);
+            pontuacao = pontuar ? pontuacao + 1 : pontuacao;
+            placar.setText('Moedas: ' + pontuacao);
+            moeda.setVisible(true);
+        }
+
+        // function 
+        function perderVida() {
+            for (var i = 0; i < 3; i++) {
+                console.log(quantidadeVidas);
+                if (vidas.children.entries[i].visible) {
+                    vidas.children.entries[i].setVisible(false);
+                    break;
+                }
+                quantidadeVidas -= 1;
+            }
+            mensagem = "Evite encostar no chão para\nnão perder vidas";
+        }
+    </script>
+</body>
+</html>
