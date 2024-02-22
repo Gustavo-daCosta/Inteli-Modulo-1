@@ -46,8 +46,6 @@
         var placar;
         var quantidadeVidas = 3;
         var vidas;
-        var mensagem;
-        var mensagemPlacar;
 
         function preload() {
             this.load.image('background', './assets/bg.png');
@@ -94,25 +92,23 @@
                 fill: '#495613',
             });
 
-            // Adiciona as vidas
+            // Adiciona as vidas ao jogo
             vidas = this.physics.add.staticGroup();
             vidas.create(larguraJogo - 160, 30, 'vida');
             vidas.create(larguraJogo - 100, 30, 'vida');
             vidas.create(larguraJogo - 40, 30, 'vida');
 
-            // Mensagem
-            mensagemPlacar = this.add.text(larguraJogo/2, alturaJogo/2, mensagem, {
-                fontSize: '45px',
-                fill: '#495613',
-            })
-
             // Lógica de capturar moedas e fazer elas nascerem de novo
             this.physics.add.overlap(alien, moeda, resetMoeda);
         }
 
+        // Lista que define as velocidades da nave
         var velocidades = [-180, 180, 0];
 
+        // Função que atualiza constantemente os objetos do jogo
         function update() {
+            // Condições encadeadas para definir a velocidade da nave no eixo X
+            // baseando-se em quais teclas foram pressionadas
             if (teclado.left.isDown) {
                 alien.setVelocityX(velocidades[0]);
             } else if (teclado.right.isDown) {  
@@ -121,24 +117,33 @@
                 alien.setVelocityX(velocidades[2]);
             }
 
+            // Lógica para mudar a velocidade no eixo Y
+            // Além de ativar o turbo
             if (teclado.up.isDown) {
                 alien.setVelocityY(velocidades[0]);
             }
+            fogo.setPosition(alien.x, alien.y + alien.height / 2);
             setTurbo(teclado.up.isDown);
 
+            // Condição para resetar o alien
+            // Isso acontece quando ele encosta na parte inferior do mapa
+            // Perdendo uma vida e tendo sua posição resetada
             if (alien.y === (alturaJogo - (alien.height/2))) {
                 alien.y = 100;
                 alien.x = larguraJogo / 2;
                 perderVida();
             }
 
-            fogo.setPosition(alien.x, alien.y + alien.height / 2);
-
+            // Condição para resetar a posição da moeda
+            // caso ela encoste na parte inferior do mapa
+            // sem interferência do alien
             if (moeda.y === (alturaJogo - (moeda.height/2))) resetMoeda(false);
         }
 
+        // Função para alterar ativar ou desativar o turbo
         function setTurbo(situacao) { fogo.setVisible(situacao); }
 
+        // Função para resetar a posição das moedas após a captura
         function resetMoeda(pontuar = true) {
             moeda.setVisible(false);
             var posicaoMoeda_Y = Phaser.Math.RND.between(50, 650);
@@ -148,7 +153,7 @@
             moeda.setVisible(true);
         }
 
-        // function 
+        // Função que define a lógica de perder vidas
         function perderVida() {
             for (var i = 0; i < 3; i++) {
                 console.log(quantidadeVidas);
@@ -158,7 +163,6 @@
                 }
                 quantidadeVidas -= 1;
             }
-            mensagem = "Evite encostar no chão para\nnão perder vidas";
         }
     </script>
 </body>
