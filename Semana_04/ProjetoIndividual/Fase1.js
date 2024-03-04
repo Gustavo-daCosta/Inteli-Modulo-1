@@ -7,14 +7,14 @@ class Fase1 extends Phaser.Scene {
   preload() {
     // Lista de caminhos do arquivos
     var filePaths = [
-      '../assets/map.png',
-      '../assets/Terra.png',
-      '../assets/Tijolo.png',
-      "../assets/Player/Idle.png",
-      "../assets/Player/Run.png",
-      "../assets/Player/Jump.png",
-      "../assets/Checkpoint.png",
-      "../assets/Apple.png"
+      './assets/map.png',
+      './assets/Terra.png',
+      './assets/Tijolo.png',
+      "./assets/Player/Idle.png",
+      "./assets/Player/Run.png",
+      "./assets/Player/Jump.png",
+      "./assets/Checkpoint.png",
+      "./assets/Apple.png"
     ];
 
     // Objeto que permite padronizar o tamanho do frame

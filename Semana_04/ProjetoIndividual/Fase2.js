@@ -12,13 +12,13 @@ class Fase2 extends Phaser.Scene {
   preload() {
     // Lista de caminhos do arquivos
     var filePaths = [
-      '../assets/map2.png',
-      '../assets/Terracota.png',
-      '../assets/Pedra.png',
-      "../assets/Player/Idle.png",
-      "../assets/Player/Run.png",
-      "../assets/Player/Jump.png",
-      '../assets/End (Idle).png',
+      './assets/map2.png',
+      './assets/Terracota.png',
+      './assets/Pedra.png',
+      "./assets/Player/Idle.png",
+      "./assets/Player/Run.png",
+      "./assets/Player/Jump.png",
+      './assets/End (Idle).png',
     ];
 
     // Objeto que permite padronizar o tamanho do frame
