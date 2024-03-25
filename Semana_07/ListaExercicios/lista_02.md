@@ -365,6 +365,50 @@ matrizSoma <- SomaDeMatrizes(matrizA, matrizB)
 Escrever("Soma das matrizes:")
 ImprimirMatriz(matrizSoma)
 ```
+**Resposta**
+
+```
+função MultiplicaçãoDeMatrizes(matrizA, matrizB) {
+    Se (tamanho(matrizA) === tamanho(matrizB)) {
+        linhas <- tamanho(matrizA)
+        colunasMatrizA <- tamanho(matrizA[0])
+        colunasMatrizB <- tamanho(matrizB[0])
+
+        matrizFinal <- [linhas, colunas]
+
+        Para a de 0 até linhasA-1 faça {
+            Para b de 0 até colunasB-1 faça {
+                elemento <- 0
+                Para c de 0 até colunasA-1 faça {
+                    elemento <- elemento + matrizA[a][c] * matrizB[c][b]
+                    matrizFinal[a][b] <- elemento
+
+                }
+            }
+        }
+
+        retornar matrizFinal
+    } senão {
+        retornar "As matrizes não podem ser multiplicadas"
+    }
+}
+
+matriz <- MultiplicaçãoDeMatrizes(matrizA, matrizB)
+Escrever("Produto das matrizes: " + matrizProduto)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 **Resposta:**
 
